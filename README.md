@@ -19,9 +19,12 @@ Bu proje, Türkiye'deki yatırım fonu yatırımcılarının portföy dağılım
 | **Toplam Yatırımcı** | 5.668.734 |
 | **Yurt İçi Yatırımcı** | 5.617.861 (%99.1) |
 | **Yurt Dışı Yatırımcı** | 50.873 (%0.9) |
-| **Toplam Fon Değeri** | 8.19 Trilyon TL |
-| **Ortalama Yatırım** | 1.451.742 TL |
-| **Medyan Yatırım** | 647.488 TL |
+| **Toplam Fon Değeri** | 8.26 Trilyon TL |
+| **Ortalama Yatırım** | 1.457.549 TL |
+| **Medyan Yatırım** | 284.672 TL |
+| **Standart Sapma** | 7.323.188 TL |
+| **Minimum** | 35 TL |
+| **Maximum** | 3.5 Milyar TL |
 
 ### Fon Türleri Dağılımı
 
@@ -90,12 +93,13 @@ fund_data_simulation/
 
 | Yüzdelik | Yatırım Miktarı |
 |----------|-----------------|
-| %10 | 127.146 TL |
-| %25 | 274.837 TL |
-| %50 (Medyan) | 647.488 TL |
-| %75 | 1.525.204 TL |
-| %90 | 3.300.162 TL |
-| %99 | 12.452.799 TL |
+| %10 | 28.106 TL |
+| %25 | 84.130 TL |
+| %50 (Medyan) | 284.672 TL |
+| %75 | 963.053 TL |
+| %90 | 2.886.725 TL |
+| %95 | 5.571.927 TL |
+| %99 | 19.077.385 TL |
 
 ## Metodoloji
 
@@ -114,6 +118,8 @@ Bu dağılım şu nedenlerle tercih edilmiştir:
 - Yalnızca pozitif değerler üretir
 - Sağa çarpık dağılım (gerçek servet dağılımını yansıtır)
 - Az sayıda çok zengin, çok sayıda orta/düşük gelirli yatırımcı
+- **Yüksek varyans**: Ortalama/Medyan oranı 5.1x (gerçekçi eşitsizlik)
+- **Pareto prensibi**: %20 yatırımcı, toplam fonun büyük çoğunluğunu tutar
 
 ## Lisans
 

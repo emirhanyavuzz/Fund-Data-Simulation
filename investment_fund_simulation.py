@@ -101,12 +101,13 @@ def generate_investor_data(n_investors, mean, variance, investor_type, seed=42):
 
 print("\n📊 Veri üretimi başlıyor...")
 
-# Yurt içi yatırımcılar için varyans (daha geniş dağılım)
-variance_yurt_ici = (ORTALAMA_YATIRIM * 2) ** 2
+# Yurt içi yatırımcılar için varyans (YÜKSEK VARYANSLAG gerçekçi eşitsizlik)
+# Gerçek dünyada servet dağılımı çok daha eşitsiz - Pareto prensibi (%20 nüfus, %80 servet)
+variance_yurt_ici = (ORTALAMA_YATIRIM * 5) ** 2  # x2 -> x5 (çok daha geniş dağılım)
 
-# Yurt dışı yatırımcılar için varyans (daha yüksek ortalama ve varyans)
-mean_yurt_disi = ORTALAMA_YATIRIM * 1.5  # Yurt dışı yatırımcılar genellikle daha yüksek miktarda yatırım yapar
-variance_yurt_disi = (mean_yurt_disi * 2.5) ** 2
+# Yurt dışı yatırımcılar için varyans (daha yüksek ortalama ve EKSTREM varyans)
+mean_yurt_disi = ORTALAMA_YATIRIM * 2.0  # x1.5 -> x2 (yurt dışı yatırımcılar daha zengin)
+variance_yurt_disi = (mean_yurt_disi * 6) ** 2  # x2.5 -> x6 (çok daha büyük uçurum)
 
 # Yurt içi yatırımcı verisi
 print(f"  → Yurt içi yatırımcı verisi üretiliyor ({YURT_ICI_YATIRIMCI:,} kişi)...")
