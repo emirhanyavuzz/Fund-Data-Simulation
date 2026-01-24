@@ -126,5 +126,5 @@ Bu proje MIT lisansı altında sunulmaktadır.
 ---
 
 <p align="center">
-  <sub>📊 Data Mining Project | 2025</sub>
+  <sub>📊 Data Mining Project | 2026</sub>
 </p>
