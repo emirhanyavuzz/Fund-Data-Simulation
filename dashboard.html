@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Türkiye Yatırım Fonu Analizi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #a0a0a0;
+            font-size: 1rem;
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 12px 28px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            color: #fff;
+        }
+
+        .nav-tab:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            border: none;
+            font-weight: 600;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .summary-card .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .summary-card .icon.blue { background: linear-gradient(135deg, #00d4ff, #0099cc); }
+        .summary-card .icon.purple { background: linear-gradient(135deg, #7b2cbf, #5a189a); }
+        .summary-card .icon.green { background: linear-gradient(135deg, #00b894, #00a085); }
+        .summary-card .icon.orange { background: linear-gradient(135deg, #f39c12, #e67e22); }
+
+        .summary-card h3 {
+            font-size: 0.85rem;
+            color: #a0a0a0;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .summary-card .value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .summary-card .sub-value {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        /* Chart Section */
+        .chart-container {
+            background: rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+
+        .chart-container h2 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            color: #00d4ff;
+        }
+
+        .chart-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* Data Table */
+        .data-section {
+            background: rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .data-section h2 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            color: #00d4ff;
+        }
+
+        .table-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .table-controls input {
+            padding: 12px 18px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 0.95rem;
+            width: 250px;
+        }
+
+        .table-controls input::placeholder {
+            color: #6c757d;
+        }
+
+        .table-controls select {
+            padding: 12px 18px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 0.95rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .data-table th {
+            background: rgba(0,212,255,0.15);
+            color: #00d4ff;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .data-table tr:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .data-table td {
+            color: #d0d0d0;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            padding: 10px 16px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination button:hover {
+            background: rgba(0,212,255,0.3);
+        }
+
+        .pagination button.active {
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            border: none;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Stats Table */
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .stats-table tr {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stats-table td {
+            padding: 16px 20px;
+        }
+
+        .stats-table td:first-child {
+            color: #a0a0a0;
+            font-weight: 500;
+        }
+
+        .stats-table td:last-child {
+            color: #00d4ff;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        /* Download Button */
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            border: none;
+            border-radius: 30px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,212,255,0.4);
+        }
+
+        /* Info Box */
+        .info-box {
+            background: rgba(0,212,255,0.1);
+            border: 1px solid rgba(0,212,255,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .info-box p {
+            color: #a0d4ff;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.6rem;
+            }
+            
+            .nav-tab {
+                padding: 10px 20px;
+                font-size: 0.85rem;
+            }
+            
+            .summary-card .value {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏦 Türkiye Yatırım Fonu Analizi</h1>
+            <p>5.668.734 Yatırımcı Verisi • 8.19 Trilyon TL Toplam Fon</p>
+        </header>
+
+        <nav class="nav-tabs">
+            <div class="nav-tab active" onclick="showTab('summary')">📊 Özet</div>
+            <div class="nav-tab" onclick="showTab('charts')">📈 Grafikler</div>
+            <div class="nav-tab" onclick="showTab('data')">📋 Veri Tablosu</div>
+            <div class="nav-tab" onclick="showTab('stats')">🔢 İstatistikler</div>
+        </nav>
+
+        <!-- ÖZET TAB -->
+        <div id="summary" class="tab-content active">
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="icon blue">👥</div>
+                    <h3>Toplam Yatırımcı</h3>
+                    <div class="value">5.668.734</div>
+                    <div class="sub-value">Yurt İçi: 5.617.861 | Yurt Dışı: 50.873</div>
+                </div>
+                <div class="summary-card">
+                    <div class="icon purple">💰</div>
+                    <h3>Toplam Fon Değeri</h3>
+                    <div class="value">8.19 Trilyon TL</div>
+                    <div class="sub-value">8.193.863 Milyon TL</div>
+                </div>
+                <div class="summary-card">
+                    <div class="icon green">📈</div>
+                    <h3>Ortalama Yatırım</h3>
+                    <div class="value">1.451.741 TL</div>
+                    <div class="sub-value">Medyan: 647.487 TL</div>
+                </div>
+                <div class="summary-card">
+                    <div class="icon orange">📊</div>
+                    <h3>Standart Sapma</h3>
+                    <div class="value">2.919.284 TL</div>
+                    <div class="sub-value">Yüksek varyans gösteriyor</div>
+                </div>
+            </div>
+
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="icon blue">🏠</div>
+                    <h3>Yurt İçi Ortalama</h3>
+                    <div class="value">1.445.186 TL</div>
+                    <div class="sub-value">5.617.861 yatırımcı</div>
+                </div>
+                <div class="summary-card">
+                    <div class="icon purple">🌍</div>
+                    <h3>Yurt Dışı Ortalama</h3>
+                    <div class="value">2.175.609 TL</div>
+                    <div class="sub-value">50.873 yatırımcı</div>
+                </div>
+                <div class="summary-card">
+                    <div class="icon green">📉</div>
+                    <h3>Minimum Yatırım</h3>
+                    <div class="value">1.165 TL</div>
+                    <div class="sub-value">En düşük yatırım miktarı</div>
+                </div>
+                <div class="summary-card">
+                    <div class="icon orange">📈</div>
+                    <h3>Maximum Yatırım</h3>
+                    <div class="value">485.9 Milyon TL</div>
+                    <div class="sub-value">En yüksek yatırım miktarı</div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <p>
+                    <strong>📌 Önemli Bulgular:</strong> Yurt dışı yatırımcıların ortalama yatırım miktarı, 
+                    yurt içi yatırımcılara göre %50 daha yüksek. Veri dağılımı sağa çarpık (lognormal) olup,
+                    çoğu yatırımcı ortalama değerin altında yatırım yapmaktadır. %99'luk dilim 12.4 Milyon TL'dir.
+                </p>
+            </div>
+        </div>
+
+        <!-- GRAFİKLER TAB -->
+        <div id="charts" class="tab-content">
+            <div class="chart-container">
+                <h2>📈 Yatırım Dağılımı Analizi</h2>
+                <img src="investment_distribution.png" alt="Yatırım Dağılımı Grafikleri">
+            </div>
+        </div>
+
+        <!-- VERİ TABLOSU TAB -->
+        <div id="data" class="tab-content">
+            <div class="data-section">
+                <h2>📋 Yatırımcı Verileri</h2>
+                
+                <div class="info-box">
+                    <p>
+                        <strong>ℹ️ Bilgi:</strong> Toplam 5.668.734 satırlık veri mevcuttur. 
+                        Performans nedeniyle tabloda örnek veriler gösterilmektedir.
+                        Tüm veriyi indirmek için aşağıdaki butonu kullanabilirsiniz.
+                    </p>
+                </div>
+
+                <div class="table-controls">
+                    <input type="text" id="searchInput" placeholder="🔍 Ara..." onkeyup="filterTable()">
+                    <select id="typeFilter" onchange="filterTable()">
+                        <option value="">Tüm Yatırımcılar</option>
+                        <option value="Yurt İçi">Yurt İçi</option>
+                        <option value="Yurt Dışı">Yurt Dışı</option>
+                    </select>
+                </div>
+
+                <table class="data-table" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Yatırımcı Tipi</th>
+                            <th>Yatırım Miktarı (TL)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+
+                <div class="pagination" id="pagination">
+                    <!-- Pagination buttons will be added by JavaScript -->
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="investor_data.csv" download class="download-btn">
+                        📥 Tüm Veriyi İndir (201 MB)
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- İSTATİSTİKLER TAB -->
+        <div id="stats" class="tab-content">
+            <div class="data-section">
+                <h2>🔢 Detaylı İstatistikler</h2>
+                
+                <table class="stats-table">
+                    <tr>
+                        <td>Toplam Yatırımcı Sayısı</td>
+                        <td>5.668.734</td>
+                    </tr>
+                    <tr>
+                        <td>Yurt İçi Yatırımcı</td>
+                        <td>5.617.861 (%99.1)</td>
+                    </tr>
+                    <tr>
+                        <td>Yurt Dışı Yatırımcı</td>
+                        <td>50.873 (%0.9)</td>
+                    </tr>
+                    <tr>
+                        <td>Ortalama (Mean)</td>
+                        <td>1.451.741,69 TL</td>
+                    </tr>
+                    <tr>
+                        <td>Medyan</td>
+                        <td>647.487,82 TL</td>
+                    </tr>
+                    <tr>
+                        <td>Standart Sapma</td>
+                        <td>2.919.284,57 TL</td>
+                    </tr>
+                    <tr>
+                        <td>Varyans</td>
+                        <td>8.522.222.400.737 TL²</td>
+                    </tr>
+                    <tr>
+                        <td>Minimum</td>
+                        <td>1.165,86 TL</td>
+                    </tr>
+                    <tr>
+                        <td>Maximum</td>
+                        <td>485.917.352,14 TL</td>
+                    </tr>
+                    <tr>
+                        <td>Toplam Fon</td>
+                        <td>8.229.537.453.545 TL</td>
+                    </tr>
+                </table>
+
+                <h2 style="margin-top: 40px;">📊 Yüzdelik Dilimler</h2>
+                <table class="stats-table" style="margin-top: 20px;">
+                    <tr>
+                        <td>10. Yüzdelik</td>
+                        <td>127.145,84 TL</td>
+                    </tr>
+                    <tr>
+                        <td>25. Yüzdelik (Q1)</td>
+                        <td>274.837,06 TL</td>
+                    </tr>
+                    <tr>
+                        <td>50. Yüzdelik (Medyan)</td>
+                        <td>647.487,82 TL</td>
+                    </tr>
+                    <tr>
+                        <td>75. Yüzdelik (Q3)</td>
+                        <td>1.525.203,64 TL</td>
+                    </tr>
+                    <tr>
+                        <td>90. Yüzdelik</td>
+                        <td>3.300.161,72 TL</td>
+                    </tr>
+                    <tr>
+                        <td>95. Yüzdelik</td>
+                        <td>5.240.461,42 TL</td>
+                    </tr>
+                    <tr>
+                        <td>99. Yüzdelik</td>
+                        <td>12.452.798,97 TL</td>
+                    </tr>
+                </table>
+
+                <h2 style="margin-top: 40px;">📈 Fon Türleri Dağılımı</h2>
+                <table class="stats-table" style="margin-top: 20px;">
+                    <tr>
+                        <td>Hisse Senedi Şemsiye Fonu</td>
+                        <td>169.351 Milyon TL (%2.1)</td>
+                    </tr>
+                    <tr>
+                        <td>Para Piyasası Şemsiye Fonu</td>
+                        <td>1.458.481 Milyon TL (%17.8)</td>
+                    </tr>
+                    <tr>
+                        <td>Diğer Fonlar</td>
+                        <td>6.566.031 Milyon TL (%80.1)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Toplam</strong></td>
+                        <td><strong>8.193.863 Milyon TL</strong></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for demonstration
+        const sampleData = [
+            { id: 1, type: 'Yurt İçi', amount: 1213915.23 },
+            { id: 2, type: 'Yurt İçi', amount: 542424.50 },
+            { id: 3, type: 'Yurt İçi', amount: 1470176.89 },
+            { id: 4, type: 'Yurt İçi', amount: 4463225.12 },
+            { id: 5, type: 'Yurt İçi', amount: 480295.00 },
+            { id: 6, type: 'Yurt İçi', amount: 480305.00 },
+            { id: 7, type: 'Yurt İçi', amount: 4792956.45 },
+            { id: 8, type: 'Yurt İçi', amount: 1711373.67 },
+            { id: 9, type: 'Yurt İçi', amount: 356332.30 },
+            { id: 10, type: 'Yurt İçi', amount: 1286612.89 },
+            { id: 11, type: 'Yurt İçi', amount: 892456.12 },
+            { id: 12, type: 'Yurt İçi', amount: 2345678.90 },
+            { id: 13, type: 'Yurt İçi', amount: 567890.23 },
+            { id: 14, type: 'Yurt İçi', amount: 1234567.89 },
+            { id: 15, type: 'Yurt İçi', amount: 3456789.01 },
+            { id: 5617862, type: 'Yurt Dışı', amount: 2456789.12 },
+            { id: 5617863, type: 'Yurt Dışı', amount: 3567890.23 },
+            { id: 5617864, type: 'Yurt Dışı', amount: 1890123.45 },
+            { id: 5617865, type: 'Yurt Dışı', amount: 4123456.78 },
+            { id: 5617866, type: 'Yurt Dışı', amount: 2789012.34 },
+        ];
+
+        let currentPage = 1;
+        const rowsPerPage = 10;
+        let filteredData = [...sampleData];
+
+        function showTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function formatNumber(num) {
+            return new Intl.NumberFormat('tr-TR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(num);
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const pageData = filteredData.slice(start, end);
+
+            tbody.innerHTML = pageData.map(row => `
+                <tr>
+                    <td>${row.id.toLocaleString('tr-TR')}</td>
+                    <td>${row.type}</td>
+                    <td>${formatNumber(row.amount)} TL</td>
+                </tr>
+            `).join('');
+
+            renderPagination();
+        }
+
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+            const pagination = document.getElementById('pagination');
+            
+            let html = `
+                <button onclick="changePage(1)" ${currentPage === 1 ? 'disabled' : ''}>«</button>
+                <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>
+            `;
+
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<button onclick="changePage(${i})" class="${currentPage === i ? 'active' : ''}">${i}</button>`;
+            }
+
+            html += `
+                <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>›</button>
+                <button onclick="changePage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>»</button>
+            `;
+
+            pagination.innerHTML = html;
+        }
+
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderTable();
+            }
+        }
+
+        function filterTable() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const typeFilter = document.getElementById('typeFilter').value;
+
+            filteredData = sampleData.filter(row => {
+                const matchesSearch = row.id.toString().includes(searchTerm) || 
+                                     row.type.toLowerCase().includes(searchTerm) ||
+                                     row.amount.toString().includes(searchTerm);
+                const matchesType = !typeFilter || row.type === typeFilter;
+                return matchesSearch && matchesType;
+            });
+
+            currentPage = 1;
+            renderTable();
+        }
+
+        // Initialize table on page load
+        document.addEventListener('DOMContentLoaded', renderTable);
+    </script>
+</body>
+</html>
