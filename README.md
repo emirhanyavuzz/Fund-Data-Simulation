@@ -125,6 +125,7 @@ Bu dağılım şu nedenlerle tercih edilmiştir:
 ## Kaynakça
 
 https://spk.gov.tr/ihrac-verileri/urun-bazinda-yatirimci-sayilari
+
 https://spk.gov.tr/ihrac-verileri/merkezi-kaydi-sistemde-bulunan-menkul-kiymet-bilgileri-milyon-tl
 
 ## Lisans
