@@ -121,6 +121,12 @@ Bu dağılım şu nedenlerle tercih edilmiştir:
 - **Yüksek varyans**: Ortalama/Medyan oranı 5.1x (gerçekçi eşitsizlik)
 - **Pareto prensibi**: %20 yatırımcı, toplam fonun büyük çoğunluğunu tutar
 
+
+## Kaynakça
+
+https://spk.gov.tr/ihrac-verileri/urun-bazinda-yatirimci-sayilari
+https://spk.gov.tr/ihrac-verileri/merkezi-kaydi-sistemde-bulunan-menkul-kiymet-bilgileri-milyon-tl
+
 ## Lisans
 
 Bu proje MIT lisansı altında sunulmaktadır.
