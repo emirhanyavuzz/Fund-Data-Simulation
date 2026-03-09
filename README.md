@@ -62,7 +62,7 @@ fund_data_simulation/
 
 ## Proje Dashboard Ekran Görüntüsü
 
-<img width="2554" height="1130" alt="Ekran görüntüsü 2026-03-09 214923" src="https://github.com/user-attachments/assets/31241421-5d0d-4a4b-8e10-531d02d0c176" />
+<img width="2554" height="1130" alt="Ekran görüntüsü 2026-03-09 214923" src="*https://github.com/emirhanyavuzz/Fund-Data-Simulation/blob/main/dashboard_ss.png**" />
 
 
 ## Özellikler
